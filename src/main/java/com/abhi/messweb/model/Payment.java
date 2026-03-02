@@ -10,8 +10,11 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int month;
-    private int year;
+@Column(name = "payment_month")
+private int month;
+
+@Column(name = "payment_year")
+private int year;
 
     private Long presentDays;
     private Long totalAmount;
