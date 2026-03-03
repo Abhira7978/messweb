@@ -10,7 +10,7 @@
 
     <h2 class="mb-4">📅 Mark Attendance</h2>
 
-    <form method="post" action="/attendance">
+    <form method="post" action="/attendance/save">
         <div class="row mb-3">
             <div class="col">
                 <select name="memberId" class="form-select" required>
@@ -68,7 +68,11 @@
             <td th:text="${a.member.name}"></td>
             <td th:text="${a.date}"></td>
             <td>
-                <span th:if="${a.present}" class="text-success">Present</span>
+               <td>
+            <span th:if="${a.breakfast}">Breakfast </span>
+            <span th:if="${a.lunch}">Lunch </span>
+            <span th:if="${a.dinner}">Dinner</span>
+               </td>
                 <span th:unless="${a.present}" class="text-danger">Absent</span>
             </td>
         </tr>

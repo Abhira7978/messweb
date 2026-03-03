@@ -27,25 +27,15 @@ public class AttendanceController {
         return "attendance";
     }
 
-    @PostMapping
-public String saveAttendance(
-        @RequestParam Long memberId,
-        @RequestParam(required = false) boolean breakfast,
-        @RequestParam(required = false) boolean lunch,
-        @RequestParam(required = false) boolean dinner
-) {
+   @PostMapping("/attendance/save")
+public String saveAttendance(@ModelAttribute Attendance attendance,
+                             @RequestParam Long memberId) {
 
     Member member = memberRepo.findById(memberId).orElseThrow();
-
-    Attendance attendance = new Attendance();
     attendance.setMember(member);
     attendance.setDate(LocalDate.now());
-    attendance.setBreakfast(breakfast);
-    attendance.setLunch(lunch);
-    attendance.setDinner(dinner);
 
     attendanceRepo.save(attendance);
 
     return "redirect:/attendance";
-}
-}
+}}
