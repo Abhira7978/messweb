@@ -5,7 +5,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
-import com.abhi.messweb.repository.PaymentRepository;
 
 import com.abhi.messweb.repository.*;
 import com.abhi.messweb.model.*;
@@ -41,8 +40,17 @@ public String generateBill(@RequestParam Long memberId,
     Long presentDays = attendanceRepo.countMonthlyPresent(memberId, month, year);
     if (presentDays == null) presentDays = 0L;
 
-    int mealCost = 100;
-    int serviceCharge = 10;
+    int total = 0;
+
+    int total = 0;
+
+    total += attendance.isBreakfast() ? 20 : 0;
+    total += attendance.isLunch() ? 50 : 0;
+    total += attendance.isDinner() ? 30 : 0;
+
+    if (total > 0) total += 10;
+
+    if (total > 0) total += 10; // service charge
 
     long totalAmount = presentDays * (mealCost + serviceCharge);
 
