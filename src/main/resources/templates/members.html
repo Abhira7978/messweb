@@ -19,7 +19,7 @@
         </div>
         <div class="card-body">
 
-            <form th:action="${member.id} != null ? @{/update} : @{/add}" 
+            <form th:action="${member.id} != null ? @{/members/update} : @{/members}"
                   th:object="${member}" 
                   method="post">
 
@@ -72,10 +72,10 @@
                     <td th:text="${m.roomNo}"></td>
                     <td th:text="${m.phone}"></td>
                     <td>
-                        <a th:href="@{/edit/{id}(id=${m.id})}" 
+                        <a th:href="@{/members/edit/{id}(id=${m.id})}" 
                            class="btn btn-warning btn-sm">Edit</a>
 
-                        <a th:href="@{/delete/{id}(id=${m.id})}" 
+                        <a th:href="@{/members/edit/{id}(id=${m.id})}"
                            class="btn btn-danger btn-sm"
                            onclick="return confirm('Are you sure?')">
                            Delete
