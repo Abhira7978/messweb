@@ -11,8 +11,8 @@ import org.springframework.data.repository.query.Param;
 public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
 
     Optional<Attendance> findByMemberIdAndDate(Long memberId, LocalDate date);
-    @Query("SELECT COUNT(a) FROM Attendance a WHERE a.member.id = :memberId AND MONTH(a.date) = :month AND YEAR(a.date) = :year AND a.present = true")
-     Long countMonthlyPresent(@Param("memberId") Long memberId,
+    @Query("SELECT COUNT(a) FROM Attendance a WHERE a.member.id = :memberId AND MONTH(a.date) = :month AND YEAR(a.date) = :year")
+Long countMonthlyPresent(Long memberId, int month, int year);
                          @Param("month") int month,
                          @Param("year") int year);
     @Query("SELECT a FROM Attendance a WHERE a.member.id = :memberId AND MONTH(a.date) = :month AND YEAR(a.date) = :year")
