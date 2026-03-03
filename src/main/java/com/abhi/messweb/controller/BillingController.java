@@ -30,29 +30,35 @@ public class BillingController {
         return "billing";
     }
 
-    @PostMapping("/billing")
+   @PostMapping("/billing")
 public String generateBill(@RequestParam Long memberId,
                            @RequestParam int month,
                            @RequestParam int year,
                            @RequestParam(required = false) Long paidAmount,
                            Model model) {
 
-    Long presentDays = attendanceRepo.countMonthlyPresent(memberId, month, year);
-    if (presentDays == null) presentDays = 0L;
+    // Get all attendance records for that member in that month
+    List<Attendance> attendanceList =
+            attendanceRepo.findByMemberIdAndMonthAndYear(memberId, month, year);
 
-    int total = 0;
+    long presentDays = 0;
+    long totalAmount = 0;
 
-    int total = 0;
+    for (Attendance attendance : attendanceList) {
 
-    total += attendance.isBreakfast() ? 20 : 0;
-    total += attendance.isLunch() ? 50 : 0;
-    total += attendance.isDinner() ? 30 : 0;
+        int mealCost = 0;
 
-    if (total > 0) total += 10;
+        if (attendance.isBreakfast()) mealCost += 20;
+        if (attendance.isLunch()) mealCost += 50;
+        if (attendance.isDinner()) mealCost += 30;
 
-    if (total > 0) total += 10; // service charge
+        if (mealCost > 0) {
+            mealCost += 10; // service charge per present day
+            presentDays++;
+        }
 
-    long totalAmount = presentDays * (mealCost + serviceCharge);
+        totalAmount += mealCost;
+    }
 
     if (paidAmount != null) {
 
@@ -66,7 +72,7 @@ public String generateBill(@RequestParam Long memberId,
         payment.setTotalAmount(totalAmount);
         payment.setPaidAmount(paidAmount);
         payment.setDueAmount(dueAmount);
-        payment.setPaymentDate(java.time.LocalDate.now());
+        payment.setPaymentDate(LocalDate.now());
 
         paymentRepo.save(payment);
 
@@ -78,5 +84,4 @@ public String generateBill(@RequestParam Long memberId,
     model.addAttribute("totalAmount", totalAmount);
 
     return "billing";
-}
-}
+}}
