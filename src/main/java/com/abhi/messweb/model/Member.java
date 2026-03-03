@@ -1,6 +1,9 @@
 package com.abhi.messweb.model;
 
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
+
 
 @Entity
 public class Member {
@@ -25,4 +28,9 @@ public class Member {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attendance> attendances;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+       private List<Payment> payments;
 }

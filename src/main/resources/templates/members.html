@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Khana Khazana Web</title>
 
     <!-- Bootstrap CSS -->
@@ -52,7 +53,8 @@
         <div class="card-header bg-dark text-white">
             Member List
         </div>
-        <div class="card-body">
+        <div class="table-responsive">
+
 
             <table class="table table-striped table-bordered">
                 <thead class="table-dark">
@@ -75,11 +77,11 @@
                         <a th:href="@{/members/edit/{id}(id=${m.id})}" 
                            class="btn btn-warning btn-sm">Edit</a>
 
-                        <a th:href="@{/members/edit/{id}(id=${m.id})}"
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('Are you sure?')">
-                           Delete
-                        </a>
+                       <a th:href="@{/members/delete/{id}(id=${m.id})}"
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('Are you sure you want to delete this member?')">
+   Delete
+</a>
                     </td>
                 </tr>
                 </tbody>

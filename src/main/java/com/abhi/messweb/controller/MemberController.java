@@ -31,7 +31,7 @@ public class MemberController {
 
     @GetMapping("/delete/{id}")
     public String deleteMember(@PathVariable Long id) {
-        repository.deleteById(id);
+        memberRepo.deleteById(id);
         return "redirect:/members";
     }
 
@@ -48,4 +48,6 @@ public class MemberController {
         repository.save(member);
         return "redirect:/members";
     }
+    
+
 }
