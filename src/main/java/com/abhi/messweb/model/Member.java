@@ -1,4 +1,5 @@
 package com.abhi.messweb.model;
+import java.util.List;
 
 import jakarta.persistence.*;
 import jakarta.persistence.CascadeType;

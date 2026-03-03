@@ -16,6 +16,7 @@ public class MemberController {
         this.repository = repository;
     }
 
+    // Show Members Page
     @GetMapping
     public String showMembers(Model model) {
         model.addAttribute("members", repository.findAll());
@@ -23,18 +24,21 @@ public class MemberController {
         return "members";
     }
 
+    // Add Member
     @PostMapping
-    public String addMember(Member member) {
+    public String addMember(@ModelAttribute Member member) {
         repository.save(member);
         return "redirect:/members";
     }
 
+    // Delete Member (Cascade will delete attendance + payments)
     @GetMapping("/delete/{id}")
     public String deleteMember(@PathVariable Long id) {
-        memberRepo.deleteById(id);
+        repository.deleteById(id);
         return "redirect:/members";
     }
 
+    // Edit Member
     @GetMapping("/edit/{id}")
     public String editMember(@PathVariable Long id, Model model) {
         Member member = repository.findById(id).orElseThrow();
@@ -43,11 +47,10 @@ public class MemberController {
         return "members";
     }
 
+    // Update Member
     @PostMapping("/update")
-    public String updateMember(Member member) {
+    public String updateMember(@ModelAttribute Member member) {
         repository.save(member);
         return "redirect:/members";
     }
-    
-
 }
