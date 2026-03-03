@@ -48,3 +48,4 @@ public String saveAttendance(
 
     return "redirect:/attendance";
 }
+}
