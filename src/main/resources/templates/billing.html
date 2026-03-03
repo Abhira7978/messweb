@@ -10,7 +10,7 @@
 
 <h2>💰 Monthly Billing</h2>
 
-<form method="post" action="/billing" class="row g-3">
+<form th:action="@{/billing}" method="post" class="row g-3">
 
     <div class="col-md-4">
         <select name="memberId" class="form-select" required>
@@ -23,11 +23,13 @@
     </div>
 
     <div class="col-md-3">
-        <input type="number" name="month" class="form-control" placeholder="Month (1-12)" required>
+        <input type="number" name="month" class="form-control"
+               placeholder="Month (1-12)" min="1" max="12" required>
     </div>
 
     <div class="col-md-3">
-        <input type="number" name="year" class="form-control" placeholder="Year (2026)" required>
+        <input type="number" name="year" class="form-control"
+               placeholder="Year (2026)" required>
     </div>
 
     <div class="col-md-2">
@@ -42,33 +44,30 @@
     <h4>Bill Details</h4>
     <p><strong>Member:</strong> <span th:text="${member.name}"></span></p>
     <p><strong>Present Days:</strong> <span th:text="${presentDays}"></span></p>
-    <p><strong>Meal Cost Per Day:</strong> ₹ <span th:text="${mealCost}"></span></p>
-    <p><strong>Service Charge Per Day:</strong> ₹ <span th:text="${serviceCharge}"></span></p>
-    <hr>
     <p><strong>Total Amount:</strong> ₹ <span th:text="${totalAmount}"></span></p>
-    <form method="post" action="/billing">
-    <input type="hidden" name="memberId" th:value="${member.id}">
-    <input type="hidden" name="month" value="">
-    <input type="hidden" name="year" value="">
 
-    <div class="mt-3">
-        <input type="number" name="paidAmount" placeholder="Enter Paid Amount" class="form-control">
+    <form th:action="@{/billing}" method="post">
+
+        <input type="hidden" name="memberId" th:value="${member.id}">
+        <input type="hidden" name="month" th:value="${month}">
+        <input type="hidden" name="year" th:value="${year}">
+
+        <div class="mt-3">
+            <input type="number" name="paidAmount"
+                   placeholder="Enter Paid Amount"
+                   class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-success mt-2">
+            Save Payment
+        </button>
+
+    </form>
+
+    <div th:if="${message}" class="alert alert-success mt-3">
+        <span th:text="${message}"></span>
     </div>
-
-    <button type="submit" class="btn btn-success mt-2">
-        Save Payment
-    </button>
-
-    <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
-</form>
-
-<div th:if="${message}" class="alert alert-success mt-3">
-    <span th:text="${message}"></span>
 </div>
-    
-</div>
-
-
 
 <a href="/" class="btn btn-secondary mt-3">Back</a>
 

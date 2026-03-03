@@ -30,58 +30,60 @@ public class BillingController {
         return "billing";
     }
 
-   @PostMapping("/billing")
-public String generateBill(@RequestParam Long memberId,
-                           @RequestParam int month,
-                           @RequestParam int year,
-                           @RequestParam(required = false) Long paidAmount,
-                           Model model) {
+    @PostMapping("/billing")
+    public String generateBill(@RequestParam Long memberId,
+                               @RequestParam int month,
+                               @RequestParam int year,
+                               @RequestParam(required = false) Long paidAmount,
+                               Model model) {
 
-    // Get all attendance records for that member in that month
-    List<Attendance> attendanceList =
-            attendanceRepo.findByMemberIdAndMonthAndYear(memberId, month, year);
+        List<Attendance> attendanceList =
+                attendanceRepo.findByMemberIdAndMonthAndYear(memberId, month, year);
 
-    long presentDays = 0;
-    long totalAmount = 0;
+        long presentDays = 0;
+        long totalAmount = 0;
 
-    for (Attendance attendance : attendanceList) {
+        for (Attendance attendance : attendanceList) {
 
-        int mealCost = 0;
+            int mealCost = 0;
 
-        if (attendance.isBreakfast()) mealCost += 20;
-        if (attendance.isLunch()) mealCost += 50;
-        if (attendance.isDinner()) mealCost += 30;
+            if (attendance.isBreakfast()) mealCost += 20;
+            if (attendance.isLunch()) mealCost += 50;
+            if (attendance.isDinner()) mealCost += 30;
 
-        if (mealCost > 0) {
-            mealCost += 10; // service charge per present day
-            presentDays++;
+            if (mealCost > 0) {
+                mealCost += 10; // service charge per day
+                presentDays++;
+            }
+
+            totalAmount += mealCost;
         }
 
-        totalAmount += mealCost;
+        if (paidAmount != null) {
+
+            long dueAmount = totalAmount - paidAmount;
+
+            Payment payment = new Payment();
+            payment.setMember(memberRepo.findById(memberId).orElseThrow());
+            payment.setMonth(month);
+            payment.setYear(year);
+            payment.setPresentDays(presentDays);
+            payment.setTotalAmount(totalAmount);
+            payment.setPaidAmount(paidAmount);
+            payment.setDueAmount(dueAmount);
+            payment.setPaymentDate(LocalDate.now());
+
+            paymentRepo.save(payment);
+
+            model.addAttribute("message", "Payment Saved Successfully!");
+        }
+
+        model.addAttribute("member", memberRepo.findById(memberId).orElseThrow());
+        model.addAttribute("presentDays", presentDays);
+        model.addAttribute("totalAmount", totalAmount);
+        model.addAttribute("month", month);
+        model.addAttribute("year", year);
+
+        return "billing";
     }
-
-    if (paidAmount != null) {
-
-        long dueAmount = totalAmount - paidAmount;
-
-        Payment payment = new Payment();
-        payment.setMember(memberRepo.findById(memberId).orElseThrow());
-        payment.setMonth(month);
-        payment.setYear(year);
-        payment.setPresentDays(presentDays);
-        payment.setTotalAmount(totalAmount);
-        payment.setPaidAmount(paidAmount);
-        payment.setDueAmount(dueAmount);
-        payment.setPaymentDate(LocalDate.now());
-
-        paymentRepo.save(payment);
-
-        model.addAttribute("message", "Payment Saved Successfully!");
-    }
-
-    model.addAttribute("member", memberRepo.findById(memberId).orElseThrow());
-    model.addAttribute("presentDays", presentDays);
-    model.addAttribute("totalAmount", totalAmount);
-
-    return "billing";
-}}
+}
